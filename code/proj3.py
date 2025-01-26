@@ -50,7 +50,7 @@ ABBR_CATEGORIES = ['Kit', 'Sto', 'Bed', 'Liv', 'Off', 'Ind', 'Sub',
 
 
 FEATURE = args.feature
-# FEATUR  = 'bag of sift'
+# FEATURE  = 'bag of sift'
 
 CLASSIFIER = args.classifier
 # CLASSIFIER = 'support vector machine'
@@ -67,6 +67,8 @@ def main():
     #and test image, as well as arrays with the label of each train and
     #test image. By default all four of these arrays will be 1500 where each
     #entry is a string.
+
+    '''Basically get one array for all the train/test image paths, and the labels have the corresponsing classes'''
     print("Getting paths and labels for all train and test data")
     train_image_paths, test_image_paths, train_labels, test_labels = \
         get_image_paths(DATA_PATH, CATEGORIES, NUM_TRAIN_PER_CAT)
@@ -80,7 +82,7 @@ def main():
 
     if FEATURE == 'tiny_image':
         # YOU CODE get_tiny_images.py 
-        train_image_feats = get_tiny_images(train_image_paths)
+        train_image_feats = get_tiny_images(train_image_paths)   # (N,d) -> N -> Number of images, d-> if image size 16, d=256
         test_image_feats = get_tiny_images(test_image_paths)
 
     elif FEATURE == 'bag_of_sift':
@@ -94,7 +96,7 @@ def main():
 
         if os.path.isfile('train_image_feats_1.pkl') is False:
             # YOU CODE get_bags_of_sifts.py
-            train_image_feats = get_bags_of_sifts(train_image_paths);
+            train_image_feats = get_bags_of_sifts(train_image_paths)
             with open('train_image_feats_1.pkl', 'wb') as handle:
                 pickle.dump(train_image_feats, handle, protocol=pickle.HIGHEST_PROTOCOL)
         else:
@@ -102,7 +104,7 @@ def main():
                 train_image_feats = pickle.load(handle)
 
         if os.path.isfile('test_image_feats_1.pkl') is False:
-            test_image_feats  = get_bags_of_sifts(test_image_paths);
+            test_image_feats  = get_bags_of_sifts(test_image_paths)
             with open('test_image_feats_1.pkl', 'wb') as handle:
                 pickle.dump(test_image_feats, handle, protocol=pickle.HIGHEST_PROTOCOL)
         else:

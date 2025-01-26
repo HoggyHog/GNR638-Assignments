@@ -2,13 +2,13 @@ import numpy as np
 import pdb
 import shutil
 import os
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
 
 def visualize(CATEGORIES, test_image_paths, test_labels_ids, predicted_categories_ids, train_labels_paths, train_labels_ids):
     main_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     thumbnails_path = os.path.join(main_path, 'results', 'thumbnails')
-    if os.path.isdir(thumbnails_path):
-        shutil.rmtree(thumbnails_path)
-        os.makedirs(thumbnails_path)
+    
 
     results_path = os.path.join(main_path, 'results')
     
@@ -54,3 +54,29 @@ def visualize(CATEGORIES, test_image_paths, test_labels_ids, predicted_categorie
         
     panel.write('\n')
     panel.close()
+
+def build_confusion_mtx(test_labels_ids, predicted_categories, abbr_categories,filename):
+
+    cm = confusion_matrix(test_labels_ids, predicted_categories)
+    np.set_printoptions(precision=2)
+
+    cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+
+    plt.figure()
+    plot_confusion_matrix(cm_normalized, abbr_categories, title='Normalized confusion matrix')
+
+    #plt.show()
+    plt.savefig(filename)
+     
+def plot_confusion_matrix(cm, category,  title='Confusion matrix',cmap=plt.cm.Blues):
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(category))
+    plt.xticks(tick_marks, category, rotation=45)
+    plt.yticks(tick_marks, category)
+    plt.tight_layout()
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    
+

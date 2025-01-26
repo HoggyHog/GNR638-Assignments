@@ -3,7 +3,7 @@ import numpy as np
 from cyvlfeat.sift.dsift import dsift
 from cyvlfeat.kmeans import kmeans
 from time import time
-
+from tqdm import tqdm
 import pdb
 
 #This function will sample SIFT descriptors from the training images,
@@ -82,8 +82,11 @@ def build_vocabulary(image_paths, vocab_size):
     #The Python Debugger
     #pdb.set_trace()
     
-    for path in image_paths:
-        img = np.asarray(Image.open(path),dtype='float32')
+    for path in tqdm(image_paths):
+        img=Image.open(path)
+        img = img.convert("L")
+        img = np.asarray(img,dtype='float32')
+        #print(img.shape)
         frames, descriptors = dsift(img, step=[5,5], fast=True)
         bag_of_features.append(descriptors)
     bag_of_features = np.concatenate(bag_of_features, axis=0).astype('float32')
@@ -91,9 +94,10 @@ def build_vocabulary(image_paths, vocab_size):
     
     print("Compute vocab")
     start_time = time()
-    vocab = kmeans(bag_of_features, vocab_size, initialization="PLUSPLUS")        
+    vocab = kmeans(bag_of_features, vocab_size, initialization="PLUSPLUS") #stores the 400 cluster centres
+    #This basically creates the 400 long vocab (clusters into which we will catgeorize the features of the image)       
     end_time = time()
-    print("It takes ", (start_time - end_time), " to compute vocab.")
+    print("It takes ", (end_time - start_time), " to compute vocab.")
     
     
     ##################################################################################

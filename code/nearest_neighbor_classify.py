@@ -3,7 +3,7 @@ from __future__ import print_function
 import numpy as np
 import scipy.spatial.distance as distance
 
-def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats):
+def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats,CATEGORIES):
     ###########################################################################
     # TODO:                                                                   #
     # This function will predict the category for every test image by finding #
@@ -36,9 +36,7 @@ def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats)
             category for each testing image.
     '''
     
-    CATEGORIES = ['Kitchen', 'Store', 'Bedroom', 'LivingRoom', 'Office',
-              'Industrial', 'Suburb', 'InsideCity', 'TallBuilding', 'Street',
-              'Highway', 'OpenCountry', 'Coast', 'Mountain', 'Forest']
+    
     K = 1
     
     N = train_image_feats.shape[0]
@@ -46,6 +44,7 @@ def nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats)
     d = train_image_feats.shape[1] # d are same in both train and test
     
     dist = distance.cdist(test_image_feats, train_image_feats, metric='euclidean')
+
     #dist = distance.cdist(train_image_feats, test_image_feats, metric='euclidean')
     test_predicts = []
     
