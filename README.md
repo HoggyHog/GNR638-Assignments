@@ -20,7 +20,15 @@ Performing classification by
 - Nearest Neighbor
 - Support Vector Machines
 
-Majority of the code base is inspired from [Github](https://github.com/lionelmessi6410/Scene-Recognition-with-Bag-of-Words/blob/master/code/proj3.py), apart from the changes we made, which are listed below
+Majority of the code base is inspired from [this project on Github](https://github.com/lionelmessi6410/Scene-Recognition-with-Bag-of-Words/blob/master/code/proj3.py), apart from the changes we made, which are listed below
+
+## Steps to run code
+
+```bash
+python assignment.py --classifier nearest_neighbor
+```
+
+Change the classifier to either `nearest_neighbor` or `support_vector_machine` as required 
 
 ## Changes done in the codebase
 
@@ -77,6 +85,8 @@ img = np.asarray(img,dtype='float32')
 for path in tqdm(image_paths):
 img=Image.open(path)
 ```
+
+- Created a [evaluate.py](../Scene-Recognition-with-Bag-of-Words/code/evaluate.py) to perform the validation check, create plots of validation accuracy, confusion matrix and finally produce the t-SNE representation of a few selected images
 
 # RESULTS
 
