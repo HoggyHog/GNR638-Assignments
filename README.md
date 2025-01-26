@@ -30,6 +30,14 @@ python assignment.py --classifier nearest_neighbor
 
 Change the classifier to either `nearest_neighbor` or `support_vector_machine` as required 
 
+Then to run the evaluation, we have a similar command
+
+```bash
+python evaluate.py --classifier nearest_neighbor
+```
+
+Change the classifier to either `nearest_neighbor` or `support_vector_machine` as required 
+
 ## Changes done in the codebase
 
 - Created a file [assignment.py](./code/assignment.py) which is based off [proj3.py](./code/proj3.py) but made it so that we can only control the classifier, and not the feature (fixed at bag_of_sift). 
