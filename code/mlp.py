@@ -187,7 +187,7 @@ def val_and_test_mlp(val_feats, val_labels,test_feats,test_labels):
                 accuracy = (predictions == val_labels).float().mean().item()
                 print(f'Validation Accuracy (MLP) for pair_{Activations[j]}_{HiddenLayers[i][0]}_{HiddenLayers[i][1]} : {accuracy:.4f}')
 
-            accuracy_dict[f'{HiddenLayers[i][0]}-{HiddenLayers[i][1]}-{Activations[j]}'] = accuracy
+            accuracy_dict[i*3+j] = accuracy
 
             if accuracy > best_acc:
                 best_acc = accuracy
