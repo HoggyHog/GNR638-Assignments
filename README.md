@@ -8,7 +8,11 @@ This is the submission for GNR638 Assignment 1 and 2
 - Sripradheep K (21B030035)
 - Submission(Latest Assignment 2) on 2-2-2025
 
-[Assignment 1](./README1.md)
+### Submission Details and code
+
+Click on these links for an explanation to each assignment
+
+[Assignment 1 ](./README1.md)
 
 [Assignment 2](./README2.md)
 
