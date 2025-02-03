@@ -1,6 +1,6 @@
-# GNR 638 Assignment-1
+# GNR 638 Assignment-1 and 2
 
-This is the submission for GNR638 Assignment 1,
+This is the submission for GNR638 Assignment 1 and 2,
 
 ### Group members and submission
 
