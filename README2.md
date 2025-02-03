@@ -9,7 +9,7 @@ So this assignment has 2 parts. In both the parts, we have to implement a 3 Laye
 
 So in this part we use the bag of sifts we created in the first part for a vocab size of 600. We use this particular vocab size since it was the largest, and having more meaningful (we consider them meaningful since they are extracted from ) input features is always better for a MLP model
 
-The entire code for this part is in [this file](./code/mlp.py)
+The entire code for this part is in [code/mlp.py](./code/mlp.py)
 
 ### Steps to run the code
 
@@ -27,38 +27,39 @@ Here is how the MLP model is defined
 
 ```python
 
-    def __init__(self, input_size, activation,hidden_size1=2048, hidden_size2=1024, num_classes=21):
-        super(MLP, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size1)
-        self.fc2 = nn.Linear(hidden_size1, hidden_size2)
-        self.fc3 = nn.Linear(hidden_size2, num_classes)
-        
-        self.relu1 = nn.ReLU()
-        self.relu2 = nn.ReLU()
+def __init__(self, input_size, activation,hidden_size1=2048, hidden_size2=1024, num_classes=21):
+    super(MLP, self).__init__()
+    self.fc1 = nn.Linear(input_size, hidden_size1)
+    self.fc2 = nn.Linear(hidden_size1, hidden_size2)
+    self.fc3 = nn.Linear(hidden_size2, num_classes)
+    
+    self.relu1 = nn.ReLU()
+    self.relu2 = nn.ReLU()
 
-        self.tanh1= nn.Tanh()
-        self.tanh2= nn.Tanh()
+    self.tanh1= nn.Tanh()
+    self.tanh2= nn.Tanh()
 
-        self.activation=activation
+    self.activation=activation
 
-    def forward(self, x):
+def forward(self, x):
 
-        if(self.activation=='ReLU'):
-            x = self.relu1(self.fc1(x))
-            x = self.relu2(self.fc2(x))
-            x = self.fc3(x)
-        
-        elif(self.activation=='Linear'):
-            x = self.fc1(x)
-            x = self.fc2(x)
-            x = self.fc3(x)
-        
-        elif(self.activation=='Tanh'):
-            x = self.tanh1(self.fc1(x))
-            x = self.tanh2(self.fc2(x))
-            x = self.fc3(x)
+    if(self.activation=='ReLU'):
+        x = self.relu1(self.fc1(x))
+        x = self.relu2(self.fc2(x))
+        x = self.fc3(x)
+    
+    elif(self.activation=='Linear'):
+        x = self.fc1(x)
+        x = self.fc2(x)
+        x = self.fc3(x)
+    
+    elif(self.activation=='Tanh'):
+        x = self.tanh1(self.fc1(x))
+        x = self.tanh2(self.fc2(x))
+        x = self.fc3(x)
 
-        return x
+    return x
+```
 
 So that we can completely control the follow of information within the MLP model. 
 
