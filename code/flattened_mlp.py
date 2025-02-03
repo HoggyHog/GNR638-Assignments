@@ -76,12 +76,12 @@ def path_loader(data_path, categories, train_percent, val_percent, test_percent)
     return train_image_paths, val_image_paths, test_image_paths, train_labels, val_labels, test_labels
 
 class MLP(nn.Module):
-    def __init__(self, input_size, hidden_size1=512, hidden_size2=256, num_classes=21):
+    def __init__(self, input_size, hidden_size1=2048, hidden_size2=1024, num_classes=21):
         super(MLP, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size1)
-        self.relu1 = nn.Linear()
+        self.relu1 = nn.ReLU()
         self.fc2 = nn.Linear(hidden_size1, hidden_size2)
-        self.relu2 = nn.Linear()
+        self.relu2 = nn.ReLU()
         self.fc3 = nn.Linear(hidden_size2, num_classes)
 
     def forward(self, x):
@@ -119,7 +119,7 @@ def train_mlp(train_feats, train_labels, val_feats, val_labels, vocab_size, num_
 
          print(f'Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}')
 
-       torch.save(model.state_dict(), f'../store/mlp_model_linear_2048_1024_Flattened_{vocab_size}.pth')
+       torch.save(model.state_dict(), f'../store/mlp_model_ReLU_2048_1024_Flattened_{vocab_size}.pth')
 
 from sklearn.model_selection import KFold
 
@@ -131,7 +131,7 @@ def cross_validate_mlp(val_feats, val_labels, vocab_size, num_folds=5, num_epoch
     val_labels = torch.tensor(val_labels, dtype=torch.long)
 
     HiddenLayers = [(512, 256), (1024, 512), (2048, 1024)]
-    Activations = ['ReLU', 'Tanh', 'GELU', 'linear']
+    Activations = ['ReLU', 'Tanh', 'GELU']
 
     accuracies = {}
     best_acc = 0
@@ -139,30 +139,30 @@ def cross_validate_mlp(val_feats, val_labels, vocab_size, num_folds=5, num_epoch
     layer2 = 0
     act = ''
 
-    #for i in range(len(HiddenLayers)):
-        #for j in range(len(Activations)):
+    for i in range(len(HiddenLayers)):
+        for j in range(len(Activations)):
             # Recreate the model architecture before loading weights
-    model = MLP(input_size=val_feats.shape[1], 
-                        hidden_size1=HiddenLayers[0][0], 
-                        hidden_size2=HiddenLayers[0][1], 
+            model = MLP(input_size=val_feats.shape[1], 
+                        hidden_size1=HiddenLayers[i][0], 
+                        hidden_size2=HiddenLayers[i][1], 
                         num_classes=len(le.classes_))
 
             # Load the state_dict
-    state_dict = torch.load(f'../store/mlp_model_{Activations[3]}_{HiddenLayers[0][0]}_{HiddenLayers[0][1]}_Flattened_600.pth')
-    model.load_state_dict(state_dict)
+            state_dict = torch.load(f'../store/mlp_model_{Activations[j]}_{HiddenLayers[i][0]}_{HiddenLayers[i][1]}_Flattened_600.pth')
+            model.load_state_dict(state_dict)
 
-    model.eval()
-    with torch.no_grad():
-            predictions = model(val_feats).argmax(dim=1)
-            accuracy = (predictions == val_labels).float().mean().item()
-            print(f'Validation Accuracy (MLP) for pair_{Activations[3]}_{HiddenLayers[0][0]}_{HiddenLayers[0][1]} : {accuracy:.4f}')
+            model.eval()
+            with torch.no_grad():
+                predictions = model(val_feats).argmax(dim=1)
+                accuracy = (predictions == val_labels).float().mean().item()
+                print(f'Validation Accuracy (MLP) for pair_{Activations[j]}_{HiddenLayers[i][0]}_{HiddenLayers[i][1]} : {accuracy:.4f}')
 
-    accuracies[((HiddenLayers[0][0],HiddenLayers[0][1]), Activations[3])] = accuracy
+            accuracies[((HiddenLayers[i][0],HiddenLayers[i][1]), Activations[j])] = accuracy
 
-    if accuracy > best_acc:
-            best_acc = accuracy
-            layer1, layer2 = HiddenLayers[0][0], HiddenLayers[0][1]
-            act = Activations[3]
+            if accuracy > best_acc:
+                best_acc = accuracy
+                layer1, layer2 = HiddenLayers[i][0], HiddenLayers[i][1]
+                act = Activations[j]
 
     print(f'Best Validation Accuracy shows for pair ({layer1}, {layer2}, {act}) = {best_acc}')
     print('STARTING TEST ON BEST PARAMETERS')
@@ -209,7 +209,6 @@ def main():
     if CLASSIFIER == 'mlp':
         model = MLP(input_size=train_image_feats.shape[1], num_classes=len(set(train_labels)))
         print("Model initialized with input size:", train_image_feats.shape[1])
-        train_mlp(train_image_feats, train_labels, val_image_feats, val_labels, vocab_size, num_epochs=200, lr=0.001)
         accuracies_record, [layer1, layer2, act, best_acc]=cross_validate_mlp(val_image_feats, val_labels, vocab_size, num_folds=5, num_epochs=200, lr=0.001)
         test_labels = np.array(test_labels)
         model_path = f'../store/mlp_model_{act}_{layer1}_{layer2}_Flattened_600.pth'
