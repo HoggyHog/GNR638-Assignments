@@ -114,12 +114,33 @@ Finally now then we use the best performing over the test data, for which the ac
 
 ```bash
 STARTING TEST ON BEST PARAMETERS
-ACCURACY FOR BEST MODEL for pair_(2048-1024, Linear) : 0.7000
+ACCURACY FOR BEST MODEL for pair_(2048-1024, Linear) : 0.7286
 ```
 
+## Using Reshaping and Flattening
 
+In this part, we dont use the bag of sifts, but apply these pre-processing steps
+- Greyscale the image (making it one channel)
+- Resize it to 72x72 
+- Make a feature vector out of (flatten it)
 
+```python
+def resize_and_flatten(image_path, size=(72, 72)):
 
+     image = Image.open(image_path)
+     image = image.convert("L")
+
+     image_resized = image.resize(size)
+
+     image_array = np.array(image_resized)
+
+     img_flattened = image_array.flatten()
+     return img_flattened
+```
+
+After this, the entire pipeline is almost exactly the same, we use the same split for train, validation and testing. Finally here are the results from the cross-validation
+
+```bash
 
 Validation Accuracy (MLP) for pair_ReLU_512_256 : 0.0476
 Validation Accuracy (MLP) for pair_Tanh_512_256 : 0.0476
@@ -134,16 +155,24 @@ Validation Accuracy (MLP) for pair_Linear_2048_1024 : 0.7000
 Best Validation Accuracy shows for pair (2048-1024, Linear) = 0.699999988079071
 Saving graph of validation accuracies to ../results/val-accuracies-MLP-flattened.png  
 
+```
+
+This change in accuracy has been captured as seen through this graph
+
+![Flattened Validation accuracy](./results/val-accuracies-MLP-flattened.png)
+
+Finally now then we use the best performing over the test data, for which the accuracy is reported
+
+
+```bash
+STARTING TEST ON BEST PARAMETERS
+ACCURACY FOR BEST MODEL for pair_(2048-1024, Linear) : 0.7000
+```
 
 
 
+### Observations and Learnings
 
+- TanH surpringsly performed better than ReLU in the case of bag of sifts, but again the better performance was in the case of the hidden layer dimension not being too high or too low, need to find that sweet spot
 
-### Important chnages from Assignment 1:
-
-- The experiment is conducted on vocab=600 as the MLP can train more efficiently if it has more bag of sift features and words, as the paramteres of the model is discussed here. The split of the dataset is kept the same in bag of sifts code.
-
-- Created a file [mlp.py](./code/mlp.py) which is based off [assignment.py](./code/assignment.py) for the implementation of MLP in bag of sifts and [flattened_mlp.py](./code/flattened_mlp.py) where the dataset is linearised into a 1D array of reduced dimensions 72*72 is passed as the input into the model and the same experiment is conducted on this linearized vector.
-
--the train_image_feats val_image_feats and test_image_feats are loaded directly from the .pkl files created before and are passed on to the model for training, validatiion and testing.
-
+- Since the entire greyscaling and then normal flattening of the pixels into a 1-D array looses out on a lot of the spatial properties otherwise present in images (Which would be captured in the case of bag of sift and CNN architectures). Hence this method is suboptimal, and in a way produces bad results with the MLP model since this makes it much harder to generalize and learn patterns when the data is shaped in this manner
