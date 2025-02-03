@@ -212,3 +212,9 @@ Here are the t-SNE representations of the keypoints from these images shown in 2
 ![t-SNE Forest](./results/t-SNE-forest.png)
 ![t-SNE Harbor](./results/t-SNE-harbor.png)
 ![t-SNE River](./results/t-SNE-river.png)
+
+
+### Observations and Learnings
+
+- Can quite easily notice that the SVM method is more of a machine learning method, and the higher the feature size (dimension of data) being fed into the model, it performs better. This is validated by the fact that the SVM performed the best using the bag of sift having vocabulary as 600, compared to the other sets which had lesser features (vocabulary size)
+

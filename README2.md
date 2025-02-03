@@ -119,6 +119,14 @@ ACCURACY FOR BEST MODEL for pair_(2048-1024, Linear) : 0.7286
 
 ## Using Reshaping and Flattening
 
+The entire code for this part is in [code/flattened_mlp.py](./code/flattened_mlp.py)
+
+### Steps to run the code
+
+```bash
+python flattened_mlp.py --classifier mlp
+```
+
 In this part, we dont use the bag of sifts, but apply these pre-processing steps
 - Greyscale the image (making it one channel)
 - Resize it to 72x72 
@@ -175,4 +183,4 @@ ACCURACY FOR BEST MODEL for pair_(2048-1024, Linear) : 0.7000
 
 - TanH surpringsly performed better than ReLU in the case of bag of sifts, but again the better performance was in the case of the hidden layer dimension not being too high or too low, need to find that sweet spot
 
-- Since the entire greyscaling and then normal flattening of the pixels into a 1-D array looses out on a lot of the spatial properties otherwise present in images (Which would be captured in the case of bag of sift and CNN architectures). Hence this method is suboptimal, and in a way produces bad results with the MLP model since this makes it much harder to generalize and learn patterns when the data is shaped in this manner
+- Since the entire greyscaling and then normal flattening of the pixels into a 1-D array looses out on a lot of the spatial properties otherwise present in images (Which would be captured in the case of bag of sift and CNN architectures). Hence this method is suboptimal, and in a way produces bad results with the MLP model since this makes it much harder to generalize and learn patterns when the data is shaped in this manner. (Possibly also a reason why Linear activation performed the best, since its not optimally learning due to the lost spatial awareness)
