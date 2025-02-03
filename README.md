@@ -6,7 +6,6 @@ This is the submission for GNR638 Assignment 1 and 2
 
 - Karthikeyan J (21D170021)
 - Sripradheep K (21B030035)
-- Submission(Latest Assignment 2) on 2-2-2025
 
 ### Submission Details and code
 
