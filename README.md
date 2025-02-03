@@ -249,3 +249,6 @@ and use the `train_mlp` function to get 9 trained models whose paths go by
 ```
 where activation=['ReLU','Tanh','GELU'] and (hidden_size1,hidden_size2)=(2048,1024),(1024,512),(512,256). `train_mlp` for one case (ReLU, 2048, 1024) is done on the uploaded code. Once the 9 trained models are collected, cross_validation using K-fold method `k=5` and test accuracy of the best model can be obtained by running the `mlp.py` code.
 
+### Important chnages from Assignment 1:
+
+The experiment is conducted on `vocab=600` as the MLP can train more efficiently if it has more bag of sift features and words, as the paramteres of the model is discussed here. Cross validat
