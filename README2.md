@@ -13,8 +13,9 @@ The entire code for this part is in [this file](./code/mlp.py)
 
 ### Steps to run the code
 
-bash
+```bash
 python mlp.py --classifier mlp
+```
 
 ### Explaining the code
 
@@ -24,7 +25,7 @@ So on running the code, there are 2 main functions that are called
 
 Here is how the MLP model is defined
 
-python
+```python
 
     def __init__(self, input_size, activation,hidden_size1=2048, hidden_size2=1024, num_classes=21):
         super(MLP, self).__init__()
