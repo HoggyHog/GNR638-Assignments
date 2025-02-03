@@ -65,8 +65,8 @@ So that we can completely control the follow of information within the MLP model
 
 The training procedure looks like this
 
-python
- for epoch in range(num_epochs):
+```python
+for epoch in range(num_epochs):
     loss_count=0
     for features, labels in train_loader:
         optimizer.zero_grad()
@@ -78,17 +78,20 @@ python
     scheduler.step(loss_count/len(train_loader))
 
     print(f'Epoch {epoch+1}/{num_epochs}, Loss: {loss.item():.4f}')
+```
             
 
 The models are then stored in this format based on the hyperparameters.
 
-bash
+```bash
 './store/mlp_model_{activation}_{hidden_size1}_{hidden_size2}.pth'
+```
 
 Then in the validation and testing code, we test for which of the 9 models produced from this training combinations has the best performance, and then we go onto to evaluate that model over the test data to report the final accuracy of the model
 
 Here are the validation results
 
+```bash
 Validation Accuracy (MLP) for pair_ReLU_512_256 : 0.7000
 Validation Accuracy (MLP) for pair_Tanh_512_256 : 0.7190
 Validation Accuracy (MLP) for pair_Linear_512_256 : 0.6952
@@ -101,6 +104,7 @@ Validation Accuracy (MLP) for pair_Linear_2048_1024 : 0.7143
 
 Best Validation Accuracy shows for pair (1024-512, Tanh) = 0.7285714149475098
 Saving graph of validation accuracies to ../results/val-accuracies-MLP.png
+```
 
 This change in accuracy has been captured as seen through this graph
 
@@ -108,9 +112,10 @@ This change in accuracy has been captured as seen through this graph
 
 Finally now then we use the best performing over the test data, for which the accuracy is reported
 
-bash
+```bash
 STARTING TEST ON BEST PARAMETERS
 ACCURACY FOR BEST MODEL for pair_(2048-1024, Linear) : 0.7000
+```
 
 
 
