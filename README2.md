@@ -25,6 +25,7 @@ So on running the code, there are 2 main functions that are called
 Here is how the MLP model is defined
 
 python
+
     def __init__(self, input_size, activation,hidden_size1=2048, hidden_size2=1024, num_classes=21):
         super(MLP, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size1)
