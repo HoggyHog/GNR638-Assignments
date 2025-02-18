@@ -215,13 +215,6 @@ def main():
     
     print('Best vocab size ',best_vocab)
 
-    
-
-
-
-
-   
-
 
 if __name__ == '__main__':
     main()
