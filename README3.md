@@ -4,6 +4,8 @@ DATE - 20-02-2025
 
 Task : To train a small CNN network to perform classification over the UCMERCED Data
 
+## DATA SETUP
+
 Data : Already split into train, val and test folders, which the following size
 - Train - 1050
 - Val - 420
@@ -47,6 +49,8 @@ To explain each of these transformations
 - 
 
 The only difference between the 2 transformations is that in the 2nd one, we include the ColorJitter and the GaussianBlur
+
+## MODEL SETUP
 
 Now we also 2 model architectures to mainly study the effect of applying batch normalization
 
@@ -107,17 +111,50 @@ class SmallCNN2(nn.Module):
 
 So here are the experiment setups we have then
 
-1) SmallCNN1 + Transform1
-2) SmallCNN2 + Transform1
-3) SmallCNN2 + Transform2
+1) SmallCNN1 + Transform1 - > Model 1
+2) SmallCNN2 + Transform1 - > Model 2 
+3) SmallCNN2 + Transform2 - > Model 3
 
 The results are as follows
 
 | **Model Architecture**    | **Transform**         | **Test Accuracy** |
 |------------------|----------------------|---------------------|
-|  **SmallCNN1**  | Transform1          | **77.30%**         |
-|  **SmallCNN2** | Transform1          | **80.32%**   |
-|  **SmallCNN2** | Transform2          | **76.83%**        |
+|  **SmallCNN1**  | **Transform1**          | **77.30%**         |
+|  **SmallCNN2** | **Transform1**          | **80.32%**   |
+|  **SmallCNN2** | **Transform2**          | **76.83%**        |
+
+
+## HEATMAPS FROM CAM
+
+These functions where then used to generate the heatmap after the feature maps where extracted from the last convolution layer (Not that we do this before the pooling, to make sure that there is not too much blur over the results).
+
+[Model 1 Airplane](./Assignment3/images/image3.png)
+
+<!--
+### Using image airplane25.jpg
+
+
+![Model 1 Airplane](./Assignment3/images/image1.png)
+Model 1
+
+![Model 2 Airplane](./Assignment3/images/image2.png)
+Model 2
+
+![Model 3 Airplane](./Assignment3/images/image3.png)
+Model 3
+
+### Using image airplane25.jpg
+
+![Model 1 Airplane](./Assignment3/images/image1.png)
+Model 1
+
+![Model 2 Airplane](./Assignment3/images/image2.png)
+Model 2
+
+![Model 3 Airplane](./Assignment3/images/image3.png)
+Model 3
+-->
+
 
 
 
