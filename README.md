@@ -11,9 +11,17 @@ This is the submission for GNR638 Assignment 1 and 2
 
 Click on these links for an explanation to each assignment
 
-[Assignment 1 ](./README1.md)
+[Assignment 1](./README1.md)
 
 [Assignment 2](./README2.md)
+
+[Assignment 3](./README3.md)
+
+
+
+
+
+
 
 
 
