@@ -4,6 +4,7 @@ import torch.optim as optim
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from torch.utils.data import DataLoader
+import torch.nn.functional as F
 import os
 import numpy
 import numpy as np
@@ -67,8 +68,8 @@ class SmallCNN1(nn.Module):
         x = self.pool(torch.relu(self.conv1(x)))
         x = self.pool(torch.relu(self.conv2(x)))
         x= torch.relu(self.conv3(x))
-        self.feature_maps = x
         x=self.pool(x)
+        self.feature_maps = x
         x = x.view(x.size(0), -1)  # Flatten
         x = torch.relu(self.fc1(x))
         #x= self.dropout(x) 
@@ -94,8 +95,8 @@ class SmallCNN2(nn.Module):
         x = self.pool(torch.relu(self.bn1(self.conv1(x))))
         x = self.pool(torch.relu(self.bn2(self.conv2(x))))
         x= torch.relu(self.bn3(self.conv3(x)))
-        self.feature_maps = x
         x=self.pool(x)
+        self.feature_maps = x
         x = x.view(x.size(0), -1)  # Flatten
         x = torch.relu(self.fc1(x))
         #x= self.dropout(x) 
@@ -140,7 +141,6 @@ def generate_cam(model, image_tensor, class_idx):
 
     return cam
 
-
 def overlay_cam(image_path, cam, filename):
     """
     Overlay the CAM heatmap on the original image.
@@ -162,22 +162,23 @@ def overlay_cam(image_path, cam, filename):
     plt.imshow(overlay)
     plt.axis("off")
     plt.savefig(filename, dpi=300, bbox_inches='tight')
-    #plt.show()
 
 # Example Usage:
-image_path="./Ucmerced/Images/test/airplane/airplane25.jpg"
+image_path="./Ucmerced/Images/test/baseballdiamond/baseballdiamond72.jpg"
 image = Image.open(image_path).convert("RGB")  # Open image
 image_tensor = transform1(image).to(device)
-cam = generate_cam(model1, image_tensor, class_idx=0)  # Change class index if needed
-overlay_cam(image_path, cam,'image1.png')
+cam = generate_cam(model1, image_tensor, class_idx=2)  # Change class index if needed
+overlay_cam(image_path, cam,'baseimage1.png')
+
 
 image_tensor = transform1(image).to(device)
-cam = generate_cam(model2, image_tensor, class_idx=0)  # Change class index if needed
-overlay_cam(image_path, cam,'image2.png')
+cam = generate_cam(model2, image_tensor, class_idx=2)  # Change class index if needed
+overlay_cam(image_path, cam,'baseimage2.png')
+
 
 image_tensor = transform2(image).to(device)
-cam = generate_cam(model3, image_tensor, class_idx=0)  # Change class index if needed
-overlay_cam(image_path, cam,'image3.png')
+cam = generate_cam(model3, image_tensor, class_idx=2)  # Change class index if needed
+overlay_cam(image_path, cam,'baseimage3.png')
 
 #test
 
@@ -186,6 +187,7 @@ model1.eval()
 model2.eval()
 model3.eval()
 
+'''
 test_correct, test_total = 0, 0
 with torch.no_grad():
     for images, labels in test_loader1:
@@ -221,4 +223,4 @@ with torch.no_grad():
 
 test_acc = 100 * test_correct / test_total
 print(f"🎯 Test Accuracy 3: {test_acc:.2f}%")
-
+'''
