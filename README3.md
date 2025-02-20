@@ -128,7 +128,7 @@ The results are as follows
 
 These functions where then used to generate the heatmap after the feature maps where extracted from the last convolution layer (Not that we do this before the pooling, to make sure that there is not too much blur over the results).
 
-[Model 1 Airplane](./Assignment3/images/image3.png)
+![Model 1 Airplane](./Assignment3/images/image3.png)
 
 <!--
 ### Using image airplane25.jpg
