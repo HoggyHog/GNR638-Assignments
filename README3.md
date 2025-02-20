@@ -109,6 +109,20 @@ So here are the experiment setups we have then
 
 1) SmallCNN1 + Transform1
 2) SmallCNN2 + Transform1
-3) SmallCNN3 + Transform2
+3) SmallCNN2 + Transform2
 
 The results are as follows
+
+| **Model Architecture**    | **Transform**         | **Test Accuracy** |
+|------------------|----------------------|---------------------|
+|  **SmallCNN1**  | Transform1          | **77.30%**         |
+|  **SmallCNN2** | Transform1          | **80.32%**   |
+|  **SmallCNN2** | Transform2          | **76.83%**        |
+
+
+
+
+
+
+
+
