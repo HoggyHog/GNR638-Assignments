@@ -113,81 +113,86 @@ print(f"✅ Train samples: {len(train_dataset)}, Val samples: {len(val_dataset)}
 num_classes = len(train_dataset.classes)  # Get the number of classes
 model = SmallCNN2(num_classes=num_classes)
 
-# Define Loss Function & Optimizer
-criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizers = {
+    "Adam": optim.Adam,
+    "SGD": optim.SGD,
+    "RMSprop": optim.RMSprop,
+    "Adagrad": optim.Adagrad
+}
 
-# Train the model
-num_epochs = 100 # Adjust as needed
+num_epochs = 50
+
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model.to(device)
 
-train_losses=[]
-val_losses=[]
-
-for epoch in range(num_epochs):
-    model.train()  # Training mode
-    running_loss, correct, total = 0.0, 0, 0
-
-    for images, labels in train_loader:
-        images, labels = images.to(device), labels.to(device)
+for opt_name, opt_func in optimizers.items():
+    print(f"Training with {opt_name} optimizer")
+    
+    model = SmallCNN2(num_classes=num_classes).to(device)
+    
+    optimizer = opt_func(model.parameters(), lr=0.0001)
+    criterion = nn.CrossEntropyLoss()
+    
+    train_losses = []
+    val_losses = []
+    
+    for epoch in range(num_epochs):
+        model.train()
+        running_loss, correct, total = 0.0, 0, 0
         
-        optimizer.zero_grad()
-        outputs = model(images)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
-
-        running_loss += loss.item()
-        train_losses.append(loss.item())
-        _, predicted = torch.max(outputs, 1)
-        correct += (predicted == labels).sum().item()
-        total += labels.size(0)
-
-    train_acc = 100 * correct / total
-
-    # Validate the model
-    model.eval()  # Evaluation mode
-    val_loss, val_correct, val_total = 0.0, 0, 0
-
-    with torch.no_grad():
-        for images, labels in val_loader:
+        for images, labels in train_loader:
             images, labels = images.to(device), labels.to(device)
+            
+            optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
-            val_loss += loss.item()
-            val_losses.append(loss.item())
+            loss.backward()
+            optimizer.step()
+            
+            running_loss += loss.item()
+            train_losses.append(loss.item())
             _, predicted = torch.max(outputs, 1)
-            val_correct += (predicted == labels).sum().item()
-            val_total += labels.size(0)
-
-    val_acc = 100 * val_correct / val_total
-
-    print(f"Epoch [{epoch+1}/{num_epochs}] - Train Loss: {running_loss/len(train_loader):.4f}, Train Acc: {train_acc:.2f}% | Val Loss: {val_loss/len(val_loader):.4f}, Val Acc: {val_acc:.2f}%")
-model_filename = f"cnn_ucmerced_drop_epoch_{epoch+1}.pth"  # Modify this as needed
-model_path = os.path.join(save_dir, model_filename)
-torch.save(model.state_dict(), model_path)
-print(f"Model saved: {model_path}")
+            correct += (predicted == labels).sum().item()
+            total += labels.size(0)
+        
+        train_acc = 100 * correct / total
+        
+        model.eval()
+        val_loss, val_correct, val_total = 0.0, 0, 0
+        
+        with torch.no_grad():
+            for images, labels in val_loader:
+                images, labels = images.to(device), labels.to(device)
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+                val_loss += loss.item()
+                val_losses.append(loss.item())
+                _, predicted = torch.max(outputs, 1)
+                val_correct += (predicted == labels).sum().item()
+                val_total += labels.size(0)
+        
+        val_acc = 100 * val_correct / val_total
+        print(f"Epoch [{epoch+1}/{num_epochs}] - Train Loss: {running_loss/len(train_loader):.4f}, Train Acc: {train_acc:.2f}% | Val Loss: {val_loss/len(val_loader):.4f}, Val Acc: {val_acc:.2f}%")
+    
+    model_filename = f"cnn_ucmerced_drop_epoch_{num_epochs}_{opt_name}.pth"
+    model_path = os.path.join(save_dir, model_filename)
+    torch.save(model.state_dict(), model_path)
+    print(f"Model saved: {model_path}")
+    
+    plt.figure(figsize=(8, 5))
+    plt.plot(np.arange(len(train_losses)), train_losses, linestyle='-', color='b', label='Train Loss')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.title(f'Training Curve - {opt_name}')
+    plt.savefig(f"Training_Curve_drop_{opt_name}.png", dpi=300, bbox_inches='tight')
+    plt.close()
+    
+    plt.figure(figsize=(8, 5))
+    plt.plot(np.arange(len(val_losses)), val_losses, linestyle='-', color='r', label='Val Loss')
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.title(f'Validation Curve - {opt_name}')
+    plt.savefig(f"Validation_Curve_drop_{opt_name}.png", dpi=300, bbox_inches='tight')
+    plt.close()
+    
 print("Training Complete!")
-
-plt.figure(figsize=(8, 5))
-plt.plot(np.arange(len(train_losses)), train_losses, linestyle='-', color='b', label='Data Points')
-plt.xlabel('Index')
-plt.ylabel('Train Loss')
-plt.title('Training Curve')
-
-plt.savefig("Training_Curve_drop.png", dpi=300, bbox_inches='tight')  # Save first graph
-plt.close()
-
-plt.figure(figsize=(8, 5))
-plt.plot(np.arange(len(val_losses)), val_losses, linestyle='-', color='b', label='Data Points')
-plt.xlabel('Index')
-plt.ylabel('Val Loss')
-plt.title('Validation Curve')
-
-plt.savefig("Validation_Curve_drop.png", dpi=300, bbox_inches='tight')  # Save first graph
-plt.close()
-
-#once model is trained, we apply cam on an image
-
 
