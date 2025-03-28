@@ -155,6 +155,8 @@ Model 2
 Model 3
 -->
 
+The assignment 4 (comparison of loss functions) is done in the above code only. Results are put up here
+
 
 
 
